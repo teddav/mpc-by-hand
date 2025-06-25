@@ -11,7 +11,7 @@ R.<x> = PolynomialRing(F2)
 Q = x^128 + x^126 + x^123 + x^121 + x^120 + x^118 + x^114 + x^112 + x^107 + x^105 + x^104 + x^103 + x^99 + x^97 + x^94 + x^89 + x^88 + x^81 + x^80 + x^78 + x^73 + x^71 + x^70 + x^68 + x^67 + x^66 + x^61 + x^58 + x^55 + x^54 + x^53 + x^52 + x^51 + x^50 + x^49 + x^48 + x^46 + x^45 + x^43 + x^42 + x^40 + x^39 + x^34 + x^32 + x^31 + x^29 + x^26 + x^25 + x^24 + x^22 + x^20 + x^18 + x^14 + x^12 + x^11 + x^6 + x^5 + x^4 + 1
 F128.<x> = F2.extension(Q)
 
-def VOLE(w, delta):
+def OLE(w, delta):
     k = F128.random_element()
     m = k - w * delta
     return (k, m)

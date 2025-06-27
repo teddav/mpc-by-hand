@@ -2,8 +2,9 @@ import random
 
 Fp = GF(101)
 
-# We ultimately want a VOLE with 5 values
-N_VOLES = 5
+# Let's say, for our circuit, we need to commit to 200 values
+# So we need 200 VOLEs
+N_VOLES = 200
 
 # The number of values in the initial VOLE (= number of leaves in the GGM tree)
 N = 15
@@ -13,9 +14,7 @@ N = 15
 G = Matrix(Fp, [[Fp.random_element() for _ in range(N)] for _ in range(N_VOLES)])
 
 # Verifier generates a random delta
-# delta = F.random_element()
-delta = Fp(10)
-print("delta", delta)
+delta = Fp.random_element()
 
 # Here's the process for each initial VOLE
 def VOLE():
@@ -66,17 +65,15 @@ E = G * e
 S = G * s
 assert F == S - E * delta
 
-print(E)
-
 # But we now have a pseudorandom VOLE
-# Remember that we want to commit our witness
-W = vector([Fp(5), Fp(10), Fp(15), Fp(20), Fp(25)])
+# Remember that we want to commit to some witness
+W = vector([Fp.random_element() for _ in range(N_VOLES)]) # in reality this is not chosen randomly
 
-# The Prover can "correct" the E by the witness W
+# The Prover can "correct" his share `E` of the VOLE by the witness `W`
 # and send it to the Verifier
 correction = E - W
 
-# Verifier can then compute his new part of the VOLE commitment as
+# Verifier can then compute his new share of the VOLE commitment as
 S = S - correction * delta
 
 # And now both the Prover and Verifier hold the correct VOLE commitment

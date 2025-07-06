@@ -9,6 +9,12 @@
 
 import os
 
+# IKNP Protocol Parameters
+F2 = GF(2)
+k = 16   # Number of base OTs (security parameter)
+m = 32   # Number of extended OTs
+l = 32   # Message length in bits
+
 # Simple XOR encryption
 def encrypt(m, k):
     m_int = int.from_bytes(m, 'big')
@@ -16,14 +22,7 @@ def encrypt(m, k):
 
 def decrypt(c, k):
     m_int = c ^^ k
-    byte_length = max(1, (m_int.bit_length() + 7) // 8)
-    return m_int.to_bytes(byte_length, 'big')
-
-# IKNP Protocol Parameters
-F2 = GF(2)
-k = 16   # Number of base OTs (security parameter)
-m = 32   # Number of extended OTs
-l = 32   # Message length in bits
+    return m_int.to_bytes(l, 'big')
 
 ### Step 0: Inputs of the protocol ###
 

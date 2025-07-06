@@ -62,14 +62,13 @@ Q = matrix(Q).transpose()
 # Sender and receiver can now use the results of the k base OT in step 1 to compute m OT
 # by leveraging Q and the relation established between Q, s, r and T
 # We iterate over the m pairs of messages and choices from the initial inputs of the protocol
-received_messages = []
 for j in range(m):
     # Sender computes two keys for the j-th OT
     row_j = Q.row(j)
     # Key for message 0: H(j, q_j)
     # Key for message 1: H(j, q_j ⊕ s)
-    k0 = hash(row_j.set_immutable())
-    k1 = hash((row_j + s).set_immutable())
+    k0 = hash((j, row_j.set_immutable()))
+    k1 = hash((j, (row_j + s).set_immutable()))
 
     # Sender encrypts the messages with the keys
     # and sends them to the receiver
@@ -80,7 +79,7 @@ for j in range(m):
 
     # Receiver computes their decryption key
     t_j = T.row(j)
-    kr = hash(t_j.set_immutable())
+    kr = hash((j, t_j.set_immutable()))
     # Receiver decrypts the corresponding message based on his choice
     choice = int(r[j])
     decrypted_message = decrypt(e0, kr) if choice == 0 else decrypt(e1, kr)

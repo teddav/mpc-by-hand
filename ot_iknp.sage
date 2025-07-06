@@ -1,5 +1,5 @@
 # IKNP OT Extension Protocol for semi-honest receiver
-# https://eprint.iacr.org/2003/196.pdf
+# https://www.iacr.org/archive/crypto2003/27290145/27290145.pdf
 # The goal is to use the results of base OTs to compute m OT of l-bits strings.
 # It will allow to reduce the m OT of l-bits strings to k OT of m-bits strings
 # with m > k >= l.

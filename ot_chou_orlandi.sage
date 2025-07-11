@@ -33,7 +33,7 @@ A = a * g
 # Bob creates its private key
 b = ZZ.random_element(n)
 # Bob chooses a bit c and create its public key depending on it.
-# If c = 0, then B = g^b, else B = A * g^b
+# If c = 0, then B = b * g, else B = A + b * g
 # Bob sends it to Alice.
 c = randrange(0, 2)
 B = b * g if c == 0 else A + b * g

@@ -2,21 +2,23 @@ import random
 
 Fp = GF(101)
 
-# Let's say, for our circuit, we need to commit to 200 values
-# So we need 200 VOLEs
-N_VOLES = 200
+# Let's say that our circuit has 20 wires, so we'll need to commit to 20 values
+# So we need a VOLE with 20 values
+N_WIRES = 20
 
 # The number of values in the initial VOLE (= number of leaves in the GGM tree)
-N = 15
+# Since the GGM tree is binary, this is a power of 2
+N = 2**3
 
 # We generate a random matrix G
 # This matrix is public, it will be used at the end
-G = Matrix(Fp, [[Fp.random_element() for _ in range(N)] for _ in range(N_VOLES)])
+G = Matrix(Fp, [[Fp.random_element() for _ in range(N)] for _ in range(N_WIRES)])
 
 # Verifier generates a random delta
 delta = Fp.random_element()
 
-# Here's the process for each initial VOLE
+# Here's the process for each initial VOLE, also called Single-Point VOLE
+# This will result in a VOLE correlation where `e` is a sparse vector of Hamming weight 1 (at index `alpha`)
 def VOLE():
     # prover picks a random index `alpha`
     alpha = random.randint(0, N - 1)
@@ -26,7 +28,7 @@ def VOLE():
     e[alpha] = 1
 
     # Verifier generates a random vector `s`
-    # This would be generated from a GGM tree
+    # This should be generated from a GGM tree, but we'll skip that construction here
     s = vector([Fp.random_element() for _ in range(N)])
 
     # Prover and Verifier run log(N) OTs to exchange N-1 values
@@ -44,7 +46,9 @@ def VOLE():
 
     return f, s, e
 
-# Run 3 initial VOLEs
+# Now let's try to construct one big pseudorandom VOLE
+
+# To do that, first let's run a few of these initial VOLEs
 f1, s1, e1 = VOLE()
 f2, s2, e2 = VOLE()
 f3, s3, e3 = VOLE()
@@ -52,6 +56,7 @@ f3, s3, e3 = VOLE()
 # VOLEs are additively homomorphic, so we can add them together
 f = f1 + f2 + f3
 e = e1 + e2 + e3
+
 # Verifier can do the same
 s = s1 + s2 + s3
 
@@ -63,11 +68,17 @@ assert f == s - e * delta
 F = G * f
 E = G * e
 S = G * s
+
+
+# We now have a pseudorandom VOLE of 
 assert F == S - E * delta
 
-# But we now have a pseudorandom VOLE
+# Now let's apply it to some circuit
+# that's the "derandomize" phase
+
 # Remember that we want to commit to some witness
-W = vector([Fp.random_element() for _ in range(N_VOLES)]) # in reality this is not chosen randomly
+# We'll generate a random witness here, but in reality this should come from our actual circuit
+W = vector([Fp.random_element() for _ in range(N_WIRES)])
 
 # The Prover can "correct" his share `E` of the VOLE by the witness `W`
 # and send it to the Verifier

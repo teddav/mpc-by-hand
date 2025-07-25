@@ -3,7 +3,7 @@ import random
 p = 101
 
 # Convert a number to binary
-def to_bin(v):
+def to_binary(v):
     return [int(i) for i in list(bin(v)[2:])]
 
 # Generate two random numbers `a` and `b`
@@ -12,18 +12,18 @@ b = random.randint(0, p)
 print("a =", a, "b =", b)
 print("a * b =", (a * b) % p)
 
-# Receiver's input `b` is converted to binary
-B = to_bin(b)[::-1]
+# Receiver's input `b` is converted to binary (in little endian)
+b_bits = to_binary(b)[::-1]
 
 # Sender generates a mask `s` of the same length as bits in `b`
-s = [random.randint(0,p) for _ in range(len(B))]
+s = [random.randint(0,p) for _ in range(len(b_bits))]
 
 # Sender computes two messages `t0` and `t1`
-t0 = s[:]
+t0 = s.copy()
 t1 = [(a * pow(2, i) + s[i]) % p for i in range(len(s))]
 
 # Receiver gets a mix of messages `t0` and `t1`, based on its input `b`
-tb = [t0[i] if _b == 0 else t1[i] for i,_b in enumerate(B)]
+tb = [t0[i] if bit == 0 else t1[i] for i,bit in enumerate(b_bits)]
 
 # Share `x`, received by the Sender is the sum of the mask `s`
 x = (-sum(s)) % p

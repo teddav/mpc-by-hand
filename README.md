@@ -1,4 +1,4 @@
-# MPC for newbies 👶
+# MPC by hand
 
 If you're new to MPC, there's a lot to learn.  
 We're trying here to explain the basics: Oblivious Transfer (OT), Oblivious Linear Evaluation (OLE), Vector Oblivious Linear Evaluation (VOLE)  
